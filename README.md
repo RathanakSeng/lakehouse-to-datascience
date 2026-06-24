@@ -61,6 +61,6 @@ Each pair folder contains a `project/` directory for runnable code and configura
 | Architecture | Pair 1 | Theory: Data Warehouse vs Data Lake vs Lakehouse | [Medium →](https://medium.com/@withrathanak/data-warehouse-vs-data-lake-vs-lakehouse-whats-actually-different-c9bd08c05ac7) |
 | Architecture | Pair 1 | Project: Lakehouse architecture blueprint | [Medium →](https://medium.com/@withrathanak/the-lakehouse-architecture-i-designed-every-layer-and-the-tool-i-chose-for-it-e0b9b8285382) |
 | Architecture | Pair 2 | Theory: Bronze, Silver, Gold | [Medium →](https://medium.com/@withrathanak/bronze-silver-gold-why-your-data-needs-three-zones-6b971b0b2a76) |
-| Architecture | Pair 2 | Project: Lakehouse storage layer with Iceberg, MinIO, Nessie, Trino | [Medium →]() |
+| Architecture | Pair 2 | Project: Lakehouse storage layer with Iceberg, MinIO, Nessie, Trino | [Medium →](https://medium.com/@withrathanak/project-build-a-lakehouse-storage-layer-with-iceberg-parquet-and-minio-aistor-c6b86d1641af) |
 
 *Table updated as posts publish. Full series index on [Medium →](https://medium.com/@withrathanak)*
