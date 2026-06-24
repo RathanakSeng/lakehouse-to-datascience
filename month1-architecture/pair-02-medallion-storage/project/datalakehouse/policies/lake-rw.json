@@ -1,0 +1,19 @@
+{
+  "Version": "2026-06-23",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::warehouse",
+        "arn:aws:s3:::warehouse/*"
+      ]
+    }
+  ]
+}

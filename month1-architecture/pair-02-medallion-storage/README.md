@@ -1,4 +1,4 @@
-# Pair 2 — Medallion Architecture Storage
+# Pair 2: Medallion Architecture Storage
 
 The first build pair of the series. It stands up the storage foundation that every later pair sits on top of: an object store, a table format with ACID guarantees, a catalog, and a SQL engine for verification. The medallion pattern (Bronze, Silver, Gold) is expressed as Iceberg namespaces inside a single `warehouse` bucket, which keeps the storage layout aligned with the theory post.
 

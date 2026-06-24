@@ -1,0 +1,160 @@
+# Data Lakehouse storage layer (Pair 2 / P2.P)
+#
+# Four roles:
+#   object store     -> MinIO AIStor   (holds Parquet data + Iceberg metadata files)
+#   table format     -> Apache Iceberg (on Parquet; added by the engine, not a service here)
+#   catalog          -> Nessie         (table pointers + Git-like history; state in Postgres)
+#   read-check engine-> Trino          (proves the tables exist and are queryable)
+#
+# One-time before first run:   docker network create lake-net
+# Then:                        cp .env.example .env  (edit secrets)  &&  docker compose up -d
+
+services:
+
+  # ------------------------------------------------------------------
+  # Object storage: MinIO AIStor, single-node (Free tier).
+  # Root credentials here are for bootstrap/admin ONLY. Engines never use them.
+  # ------------------------------------------------------------------
+  minio:
+    image: quay.io/minio/aistor/minio:RELEASE.2026-02-07T07-43-34Z
+    container_name: minio
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./aistor/data:/mnt/data
+      - ./aistor/minio.license:/minio.license:ro
+      # TLS is out of scope for a local stack. For production, mount certs here,
+      # point the server at them, and switch every endpoint below to https://
+      # - ./aistor/certs:/etc/minio/certs:ro
+    command: >
+      minio server /mnt/data
+      --console-address ":9001"
+      --license /minio.license
+    networks: [lake-net]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9000/minio/health/live || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # ------------------------------------------------------------------
+  # One-shot bootstrap. Runs to completion and exits (restart: "no").
+  # Creates: the warehouse bucket, object versioning, a scoped identity,
+  # and a least-privilege policy attached to that identity.
+  # ------------------------------------------------------------------
+  mc:
+    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+    container_name: mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      LAKE_USER: ${LAKE_USER}
+      LAKE_PASSWORD: ${LAKE_PASSWORD}
+    volumes:
+      - ./policies:/policies:ro
+    entrypoint: ["/bin/sh", "-lc"]
+    command: >
+      "
+      mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
+      mc mb -p local/warehouse || true &&
+      mc version enable local/warehouse &&
+      mc admin policy create local lake-rw /policies/lake-rw.json || true &&
+      mc admin user add local $$LAKE_USER $$LAKE_PASSWORD || true &&
+      mc admin policy attach local lake-rw --user $$LAKE_USER || true &&
+      echo 'bootstrap complete'
+      "
+    networks: [lake-net]
+    restart: "no"
+
+  # ------------------------------------------------------------------
+  # Catalog metadata database. This is the single source of truth for
+  # WHICH tables exist and WHERE. Back it up. Not exposed to the host.
+  # ------------------------------------------------------------------
+  nessie_db:
+    image: postgres:16
+    container_name: nessie_db
+    environment:
+      POSTGRES_USER: ${NESSIE_DB_USER}
+      POSTGRES_PASSWORD: ${NESSIE_DB_PASSWORD}
+      POSTGRES_DB: ${NESSIE_DB_NAME}
+    # Reachable only on lake-net. Uncomment only for ad-hoc local inspection:
+    # ports: ["5440:5432"]
+    volumes:
+      - ./nessie/pgdata:/var/lib/postgresql/data
+    networks: [lake-net]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ------------------------------------------------------------------
+  # Nessie: the catalog. Version store only -> Postgres (durable, Git-like
+  # history). Trino reaches it with the native Nessie connector (api/v2),
+  # supplying the warehouse dir and scoped S3 key itself. No server-side
+  # object-store block is needed for that path.
+  # ------------------------------------------------------------------
+  nessie:
+    image: ghcr.io/projectnessie/nessie:0.91.3
+    container_name: nessie
+    depends_on:
+      nessie_db:
+        condition: service_healthy
+      mc:
+        condition: service_completed_successfully
+    environment:
+      QUARKUS_HTTP_PORT: "19120"
+      # Version store: catalog history lives in Postgres, not in memory
+      NESSIE_VERSION_STORE_TYPE: JDBC
+      QUARKUS_DATASOURCE_DB_KIND: postgresql
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://nessie_db:5432/${NESSIE_DB_NAME}
+      QUARKUS_DATASOURCE_USERNAME: ${NESSIE_DB_USER}
+      QUARKUS_DATASOURCE_PASSWORD: ${NESSIE_DB_PASSWORD}
+    ports: ["19120:19120"]
+    networks: [lake-net]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:19120/api/v2/config || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ------------------------------------------------------------------
+  # Trino: read-check engine. Connects to Nessie via the Iceberg REST spec.
+  # Only the catalog dir is mounted, so the image's own config stays intact.
+  # ------------------------------------------------------------------
+  trino:
+    image: trinodb/trino:481
+    container_name: trino
+    depends_on:
+      minio:
+        condition: service_healthy
+      nessie:
+        condition: service_healthy
+    ports: ["8080:8080"]
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog:ro
+    environment:
+      JAVA_TOOL_OPTIONS: -Xmx${TRINO_HEAP}
+    networks: [lake-net]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/v1/info || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+networks:
+  lake-net:
+    external: true
