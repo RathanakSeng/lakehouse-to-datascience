@@ -5,7 +5,7 @@ The first build pair of the series. It stands up the storage foundation that eve
 ## Posts
 
 - **Theory:** Bronze, Silver, Gold: why your data needs three zones. [Read on Medium →](https://medium.com/@withrathanak/bronze-silver-gold-why-your-data-needs-three-zones-6b971b0b2a76)
-- **Project:** Build a lakehouse storage layer with Iceberg, Parquet, and MinIO AIStor. [Read on Medium →]()
+- **Project:** Build a lakehouse storage layer with Iceberg, Parquet, and MinIO AIStor. [Read on Medium →](https://medium.com/@withrathanak/project-build-a-lakehouse-storage-layer-with-iceberg-parquet-and-minio-aistor-c6b86d1641af)
 
 ## Architecture
 
