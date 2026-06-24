@@ -44,13 +44,13 @@ Each pair folder contains a `project/` directory for runnable code and configura
 
 ## Technology covered
 
-1. **Storage & formats** — MinIO AIStor, Apache Iceberg on Parquet, Project Nessie, PostgreSQL
-2. **Ingestion & streaming** — Apache Kafka, Debezium CDC
-3. **Processing** — Apache Spark / PySpark
-4. **Orchestration** — Apache Airflow
-5. **Query & federation** — Trino, Dremio
-6. **Architecture & modeling** — Bronze/Silver/Gold medallion, star schema, Data Vault (Hubs, Links, Satellites)
-7. **Data Science** — exploratory data analysis, feature engineering, classification, regression.
+1. **Storage & formats:** MinIO AIStor, Apache Iceberg on Parquet, Project Nessie, PostgreSQL
+2. **Ingestion & streaming:** Apache Kafka, Debezium CDC
+3. **Processing:** Apache Spark / PySpark
+4. **Orchestration:** Apache Airflow
+5. **Query & federation:** Trino, Dremio
+6. **Architecture & modeling:** Bronze/Silver/Gold medallion, star schema, Data Vault (Hubs, Links, Satellites)
+7. **Data Science:** exploratory data analysis, feature engineering, classification, regression.
 
 ---
 
