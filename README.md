@@ -56,11 +56,12 @@ Each pair folder contains a `project/` directory for runnable code and configura
 
 ## Published articles
 
-| Phase | Pair | Post | Link |
-|-------|------|------|------|
-| Architecture | Pair 1 | Theory: Data Warehouse vs Data Lake vs Lakehouse | [Medium →](https://medium.com/@withrathanak/data-warehouse-vs-data-lake-vs-lakehouse-whats-actually-different-c9bd08c05ac7) |
-| Architecture | Pair 1 | Project: Lakehouse architecture blueprint | [Medium →](https://medium.com/@withrathanak/the-lakehouse-architecture-i-designed-every-layer-and-the-tool-i-chose-for-it-e0b9b8285382) |
-| Architecture | Pair 2 | Theory: Bronze, Silver, Gold | [Medium →](https://medium.com/@withrathanak/bronze-silver-gold-why-your-data-needs-three-zones-6b971b0b2a76) |
-| Architecture | Pair 2 | Project: Lakehouse storage layer with Iceberg, MinIO, Nessie, Trino | [Medium →](https://medium.com/@withrathanak/project-build-a-lakehouse-storage-layer-with-iceberg-parquet-and-minio-aistor-c6b86d1641af) |
+| Phase | Pair                    | Post | Link |
+|-------|-------------------------|------|------|
+| Architecture | Pair 1: The Big Picture | Theory: Data Warehouse vs Data Lake vs Lakehouse | [Medium →](https://medium.com/@withrathanak/data-warehouse-vs-data-lake-vs-lakehouse-whats-actually-different-c9bd08c05ac7) |
+| Architecture | Pair 1: The Big Picture | Project: Lakehouse architecture blueprint | [Medium →](https://medium.com/@withrathanak/the-lakehouse-architecture-i-designed-every-layer-and-the-tool-i-chose-for-it-e0b9b8285382) |
+| Architecture | Pair 2: Storage Layer   | Theory: Bronze, Silver, Gold | [Medium →](https://medium.com/@withrathanak/bronze-silver-gold-why-your-data-needs-three-zones-6b971b0b2a76) |
+| Architecture | Pair 2: Storage Layer   | Project: Lakehouse storage layer with Iceberg, MinIO, Nessie, Trino | [Medium →](https://medium.com/@withrathanak/project-build-a-lakehouse-storage-layer-with-iceberg-parquet-and-minio-aistor-c6b86d1641af) |
+| Architecture | Pair 3: Ingestion Layer | Two ways to get data in: batch ingestion and Change Data Capture | [Medium →](https://medium.com/@withrathanak/two-ways-to-get-data-in-batch-ingestion-and-change-data-capture-e018cf56200c) |
 
 *Table updated as posts publish. Full series index on [Medium →](https://medium.com/@withrathanak)*
