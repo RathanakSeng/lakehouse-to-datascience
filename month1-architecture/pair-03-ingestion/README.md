@@ -68,9 +68,9 @@ docker exec -it spark-iceberg bash
 
 Three flags worth naming, all learned from real runtime errors:
 
-- `/opt/spark/bin/spark-submit` — the `apache/spark` image does not put `spark-submit` on `PATH`.
-- `--conf spark.jars.ivy=/tmp/.ivy2` — the default Ivy cache path (`/home/spark/.ivy2`) is not writable in the image; without this override, package resolution fails.
-- `--packages` — this pulls Iceberg, Nessie, and Hadoop AWS jars at runtime. Acceptable for a first run; a custom Docker image with the jars baked in is on the roadmap for Pair 4 so runs are not gated on network resolution.
+- `/opt/spark/bin/spark-submit`: the `apache/spark` image does not put `spark-submit` on `PATH`.
+- `--conf spark.jars.ivy=/tmp/.ivy2`: the default Ivy cache path (`/home/spark/.ivy2`) is not writable in the image; without this override, package resolution fails.
+- `--packages`: this pulls Iceberg, Nessie, and Hadoop AWS jars at runtime. Acceptable for a first run; a custom Docker image with the jars baked in is on the roadmap for Pair 4 so runs are not gated on network resolution.
 
 ### 4. Verify from Trino
 
