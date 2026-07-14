@@ -6,7 +6,7 @@ The ingestion pair. It covers the two ways raw data first lands in the Bronze la
 
 - **Theory:** Batch ingestion vs. change data capture: how change is detected, how fresh the copy must be. [Read on Medium →](https://medium.com/@withrathanak/two-ways-to-get-data-in-batch-ingestion-and-change-data-capture-e018cf56200c)
 - **Project (batch):** Loading the WFP Cambodia food price dataset into Bronze with PySpark and Iceberg. [Read on Medium →](https://medium.com/@withrathanak/project-i-loaded-86k-rows-of-cambodia-food-price-data-into-a-lakehouse-heres-the-actual-process-3790c08488af)
-- **Project (CDC):** Building a real-time ingestion pipeline with Kafka and Debezium: every step. [Read on Medium →]()
+- **Project (CDC):** Building a real-time ingestion pipeline with Kafka and Debezium: every step. [Read on Medium →](https://medium.com/@withrathanak/project-i-built-a-real-time-ingestion-pipeline-with-kafka-and-debezium-4cd063a4e1f9)
 
 ## Architecture
 
