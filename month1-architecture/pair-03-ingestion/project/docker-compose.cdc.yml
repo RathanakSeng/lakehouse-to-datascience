@@ -1,0 +1,74 @@
+services:
+  pisey_db:
+    image: postgres:16
+    container_name: pisey_db
+    environment:
+      POSTGRES_USER: ${PISEY_DB_USER}
+      POSTGRES_PASSWORD: ${PISEY_DB_PASSWORD}
+      POSTGRES_DB: pisey_shop
+    command: >
+      postgres -c wal_level=logical
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./pisey_shop/pgdata:/var/lib/postgresql/data
+    networks: [ lake-net ]
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d pisey_shop" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  kafka-cdc:
+      image: apache/kafka:4.3.1
+      hostname: kafka-cdc
+      container_name: kafka-cdc
+      environment:
+        KAFKA_NODE_ID: 1
+        KAFKA_PROCESS_ROLES: broker,controller
+        KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-cdc:9092
+        KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-cdc:9093
+        KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      networks: [lake-net]
+      restart: unless-stopped
+
+  connect-cdc:
+    image: debezium/connect:2.6
+    container_name: connect-cdc
+    depends_on: [kafka-cdc, pisey_db]
+    ports: ["8083:8083"]
+    environment:
+      BOOTSTRAP_SERVERS: kafka-cdc:9092
+      GROUP_ID: lake-connect
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+      # Kafka Connect's built-in Config Provider mechanism (KIP-297)
+      CONNECT_CONFIG_PROVIDERS: file
+      CONNECT_CONFIG_PROVIDERS_FILE_CLASS: org.apache.kafka.common.config.provider.FileConfigProvider
+    volumes:
+      # Read-only mount. Contents are real credentials, avoid exposing
+      - ./secrets/connect:/opt/kafka/secrets:ro
+    networks: [lake-net]
+    restart: unless-stopped
+
+  kafka-cdc-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: kafka-cdc-ui
+    depends_on: [kafka-cdc, connect-cdc]
+    ports: ["8088:8080"]
+    environment:
+      KAFKA_CLUSTERS_0_NAME: pisey-lake
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-cdc:9092
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: connect-cdc
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://connect-cdc:8083
+    networks: [lake-net]
+    restart: unless-stopped
+
+networks:
+  lake-net:
+    external: true
+    name: lake-net

@@ -1,0 +1,16 @@
+{
+  "name": "pisey-shop-source",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "pisey_db",
+    "database.port": "5432",
+    "database.user": "${file:/opt/kafka/secrets/pisey_db.properties:user}",
+    "database.password": "${file:/opt/kafka/secrets/pisey_db.properties:password}",
+    "database.dbname": "pisey_shop",
+    "topic.prefix": "pisey_shop",
+    "table.include.list": "public.products,public.orders",
+    "plugin.name": "pgoutput",
+    "snapshot.mode": "initial",
+    "slot.name": "pisey_shop_slot"
+  }
+}
