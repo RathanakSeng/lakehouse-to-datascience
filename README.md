@@ -35,7 +35,9 @@ The series runs in three phases, each built on the last. Every pair is self-cont
 lakehouse-to-datascience/
 ├── month1-architecture/
 │   ├── pair-01-lakehouse-architecture/      # Warehouse vs lake vs lakehouse + full blueprint
-└── └── pair-02-medallion-storage/           # Medallion Architecture: Bronze/Silver/Gold + Iceberg, MinIO, Nessie, Trino
+│   ├── pair-02-medallion-storage/           # Medallion Architecture: Bronze/Silver/Gold + Iceberg, MinIO, Nessie, Trino
+│   ├── pair-03-ingestion-layer/             # Bronze layer, Spark, Kafka + Debezium
+└── └── pair-04-processing-layer/            # Silver layer, Spark
 ```
 
 Each pair folder contains a `project/` directory for runnable code and configuration, plus a pair-level `README.md` with concept diagrams and links to the published posts.
