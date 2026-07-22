@@ -5,7 +5,7 @@ The processing pair. It takes the raw Bronze tables landed in Pair 3 and turns t
 ## Posts
 
 - **Theory.** Why Spark: processing data at a scale one machine can't handle. [Read on Medium →](https://medium.com/@withrathanak/why-spark-processing-data-at-a-scale-one-machine-cant-handle-d701f227b303)
-- **Project.** Processing Bronze into Silver with PySpark: a real transformation pipeline. [Read on Medium →]()
+- **Project.** Processing Bronze into Silver with PySpark: a real transformation pipeline. [Read on Medium →](https://medium.com/@withrathanak/processing-bronze-into-silver-with-pyspark-a-real-transformation-pipeline-9d2b717c607e)
 
 ## Architecture
 
