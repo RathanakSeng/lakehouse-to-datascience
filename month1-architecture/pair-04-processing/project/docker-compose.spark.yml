@@ -1,0 +1,26 @@
+services:
+  spark-iceberg:
+    build:
+      context: .
+      dockerfile: spark.Dockerfile
+    image: lakehouse-spark:3.5.3-iceberg1.5.2
+    container_name: spark-iceberg
+    environment:
+      AWS_ACCESS_KEY_ID: ${LAKE_USER}
+      AWS_SECRET_ACCESS_KEY: ${LAKE_PASSWORD}
+      AWS_REGION: us-east-1
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./spark/jobs:/opt/spark/jobs
+      - ./spark/data:/opt/spark/data
+    entrypoint: ["/bin/bash"]
+    tty: true
+    stdin_open: true
+    networks:
+      - lake-net
+
+networks:
+  lake-net:
+    external: true
+    name: lake-net
