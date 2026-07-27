@@ -37,7 +37,9 @@ lakehouse-to-datascience/
 │   ├── pair-01-lakehouse-architecture/      # Warehouse vs lake vs lakehouse + full blueprint
 │   ├── pair-02-medallion-storage/           # Medallion Architecture: Bronze/Silver/Gold + Iceberg, MinIO, Nessie, Trino
 │   ├── pair-03-ingestion-layer/             # Bronze layer, Spark, Kafka + Debezium
-└── └── pair-04-processing-layer/            # Silver layer, Spark
+│   ├── pair-04-processing-layer/            # Silver layer, Spark
+├── month2-modeling, etl & orchestration/
+└── └── pair-05-data-modeling/               # Star Schema vs Data Vault
 ```
 
 Each pair folder contains a `project/` directory for runnable code and configuration, plus a pair-level `README.md` with concept diagrams and links to the published posts.
