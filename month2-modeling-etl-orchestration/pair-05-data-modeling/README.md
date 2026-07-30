@@ -5,7 +5,7 @@ The modeling pair. The theory post compares the two dominant analytical modeling
 ## Posts
 
 - **Theory.** Star schema vs Data Vault: two ways to model the same business. [Read on Medium →](https://medium.com/@withrathanak/star-schema-vs-data-vault-two-ways-to-model-the-same-business-d0cf9af68ef4?sharedUserId=withrathanak)
-- **Project.** When the shop keeps changing: building a CDC-fed Silver Data Vault. [Read on Medium →]()
+- **Project.** When the shop keeps changing: building a CDC-fed Silver Data Vault. [Read on Medium →](https://medium.com/@withrathanak/when-the-shop-keeps-changing-building-a-cdc-fed-silver-data-vault-8ba7ef98df64?sharedUserId=withrathanak)
 
 ## Architecture
 
